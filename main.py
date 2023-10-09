@@ -11,6 +11,7 @@ def main(page: ft.Page):
 	page.horizontal_alignment = "center"
 	page.window_max_height = 600
 	page.window_max_width = 400
+	page.bgcolor = '#D2E0FB'
 
 	calc_input = ft.TextField(text_align="right", width=300, autofocus=True)
 
