@@ -1,203 +1,84 @@
+from functools import partial
+
 import flet as ft
-import math
-from pathlib import Path
 
 
-def main(page: ft.page):
-	page.title = 'PyCalculator'
-	page.window_height = 450
-	page.window_width = 350
-	page.bgcolor = '#232323'
+def main(page: ft.Page):
 
-	def keyboard(e):
-		try:
-			data = e.control.data
+	page.title = "JCal"
+	page.theme_mode = "dark"
+	page.padding = 20
+	page.vertical_alignment = "center"
+	page.horizontal_alignment = "center"
+	page.window_max_height = 600
+	page.window_max_width = 400
 
-			if (data in [str(n) for n in range(0, 10)]) or \
-				(data in ['<', '.', '+', '-', '*', '/', '(', ')', '**']):
-				txt.value = str(txt.value) + str(data)
-				page.update()
+	calc_input = ft.TextField(text_align="right", width=300, autofocus=True)
 
-			if data == '=':
-				txt.value = str(eval(txt.value))
-				page.update()
+	page.add(calc_input)
 
-			if data == 'e':
-				st = list(txt.value)
-				st.pop()
-				txt.value = ''.join(map(str, st))
-				page.update()
+	def enterdata(e, number):
+		"""Function to print entered data"""
+		if (number == 'C'):
+			calc_input.value = ''
+			page.add(calc_input)
+		else:
+			calc_input.value = calc_input.value + number
+			page.add(calc_input)
 
-			if data == 'C':
-				st = list(txt.value)
-				st.pop()
-				txt.value = ''
-				page.update()
+	def calculate(e):
+		"""Function to display calculated data"""
 
-			if data == '≈':
-				txt.value = round(int(txt.value))
-				txt.value = str(txt.value)
-				page.update()
+		output = eval(calc_input.value)
+		calc_input.value = output
+		page.add(calc_input)
 
-			if data == '√':
-				txt.value = str(math.sqrt(int(txt.value)))
-				page.update()
+	# Creating buttons 7 to +
+	but7 = ft.ElevatedButton("7", on_click=partial(enterdata, number='7'))
+	but8 = ft.ElevatedButton("8", on_click=partial(enterdata, number='8'))
+	but9 = ft.ElevatedButton("9", on_click=partial(enterdata, number='9'))
+	but_add = ft.ElevatedButton("+", on_click=partial(enterdata, number='+'), bgcolor="orange", color="black")
 
-		except (ValueError, IndexError, SyntaxError):
-			txt.value = 'Syntax Error'
-			page.update()
+	# Adding buttons to row and page
+	row1 = ft.Row(width=300, controls=[but7, but8, but9, but_add], alignment="center")
+	page.add(row1)
 
-	txt = ft.TextField(
-		read_only=True,
-		border_color='#FFFFFF',
-		text_style=ft.TextStyle(size=30, color='#FFFFFF')
-	)
-	# <, (, ), ÷
-	btn_e = ft.ElevatedButton(
-		text='<', bgcolor='#FFB703', color='#FFFFFF', data='e', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_po = ft.ElevatedButton(
-		text='(', bgcolor='#FFB703', color='#FFFFFF', data='(', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_pc = ft.ElevatedButton(
-		text=')', bgcolor='#FFB703', color='#FFFFFF', data=')', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_division = ft.ElevatedButton(
-		text='÷', bgcolor='#2A93D5', color='#232323', data='/', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
+	# Creating buttons 4 to -
+	but4 = ft.ElevatedButton("4", on_click=partial(enterdata, number='4'))
+	but5 = ft.ElevatedButton("5", on_click=partial(enterdata, number='5'))
+	but6 = ft.ElevatedButton("6", on_click=partial(enterdata, number='6'))
+	but_minus = ft.ElevatedButton("-", on_click=partial(enterdata, number='-'), bgcolor="orange", color="black")
 
-	r1 = ft.Row(
-		controls=[btn_e, btn_po, btn_pc, btn_division],
-		alignment=ft.MainAxisAlignment.SPACE_BETWEEN
-	)
+	# Adding buttons to row and page
+	row2 = ft.Row(width=300, controls=[but4, but5, but6, but_minus], alignment="center")
+	page.add(row2)
 
-	btn_7 = ft.ElevatedButton(
-		text='7', bgcolor='#FFFFFF', color='#232323', data='7', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_8 = ft.ElevatedButton(
-		text='8', bgcolor='#FFFFFF', color='#232323', data='8', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_9 = ft.ElevatedButton(
-		text='9', bgcolor='#FFFFFF', color='#232323', data='9', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_multiplication = ft.ElevatedButton(
-		text='×', bgcolor='#2A93D5', color='#232323', data='*', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
+	# Creating buttons 1 to x
+	but1 = ft.ElevatedButton("1", on_click=partial(enterdata, number='1'))
+	but2 = ft.ElevatedButton("2", on_click=partial(enterdata, number='2'))
+	but3 = ft.ElevatedButton("3", on_click=partial(enterdata, number='3'))
+	but_mul = ft.ElevatedButton("X", on_click=partial(enterdata, number='*'), bgcolor="orange", color="black")
 
-	r2 = ft.Row(
-		controls=[btn_7, btn_8, btn_9, btn_multiplication],
-		alignment=ft.MainAxisAlignment.SPACE_BETWEEN
-	)
+	# Adding buttons to row and page
+	row3 = ft.Row(width=300, controls=[but1, but2, but3, but_mul], alignment="center")
+	page.add(row3)
 
-	btn_4 = ft.ElevatedButton(
-		text='4', bgcolor='#FFFFFF', color='#232323', data='4', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_5 = ft.ElevatedButton(
-		text='5', bgcolor='#FFFFFF', color='#232323', data='5', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_6 = ft.ElevatedButton(
-		text='6', bgcolor='#FFFFFF', color='#232323', data='6', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_subtraction = ft.ElevatedButton(
-		text='-', bgcolor='#2A93D5', color='#232323', data='-', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
+	# Creating . to /
+	but_dot = ft.ElevatedButton(".", on_click=partial(enterdata, number='.'))
+	but0 = ft.ElevatedButton("0", on_click=partial(enterdata, number='0'))
+	but_clear = ft.ElevatedButton("AC", on_click=partial(enterdata, number='C'), bgcolor="orange", color="black")
+	but_clear = ft.ElevatedButton("AC", on_click=partial(enterdata, number='C'), bgcolor="orange", color="black")
+	but_divide = ft.ElevatedButton("/", on_click=partial(enterdata, number='/'), bgcolor="orange", color="black")
 
-	r3 = ft.Row(
-		controls=[btn_4, btn_5, btn_6, btn_subtraction],
-		alignment=ft.MainAxisAlignment.SPACE_BETWEEN
-	)
+	# Adding to row and page
+	row4 = ft.Row(width=300, controls=[but_dot, but0, but_clear, but_divide], alignment="center")
+	page.add(row4)
 
-	btn_1 = ft.ElevatedButton(
-		text='1', bgcolor='#FFFFFF', color='#232323', data='1', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_2 = ft.ElevatedButton(
-		text='2', bgcolor='#FFFFFF', color='#232323', data='2', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_3 = ft.ElevatedButton(
-		text='3', bgcolor='#FFFFFF', color='#232323', data='3', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_addition = ft.ElevatedButton(
-		text='+', bgcolor='#2A93D5', color='#232323', data='+', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-
-	r4 = ft.Row(
-		controls=[btn_1, btn_2, btn_3, btn_addition],
-		alignment=ft.MainAxisAlignment.SPACE_BETWEEN
-	)
-
-	btn_c = ft.ElevatedButton(
-		text='C', bgcolor='#FFFFFF', color='#232323', data='C', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_0 = ft.ElevatedButton(
-		text='0', bgcolor='#FFFFFF', color='#232323', data='0', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_point = ft.ElevatedButton(
-		text='.', bgcolor='#FFFFFF', color='#232323', data='.', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_equal = ft.ElevatedButton(
-		text='=', bgcolor='#2A93D5', color='#232323', data='=', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-
-	r5 = ft.Row(
-		controls=[btn_c, btn_0, btn_point, btn_equal],
-		alignment=ft.MainAxisAlignment.SPACE_BETWEEN
-	)
-
-	btn_round = ft.ElevatedButton(
-		text='≈', bgcolor='#FFB703', color='#FFFFFF', data='≈', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_root = ft.ElevatedButton(
-		text='√', bgcolor='#FFB703', color='#FFFFFF', data='√', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	btn_exponent = ft.ElevatedButton(
-		text='^', bgcolor='#FFB703', color='#FFFFFF', data='**', on_click=keyboard,
-		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
-	)
-	python_img = ft.Image(
-		src=str(Path.cwd() / 'gui_app' / 'img' / 'snek_3.png'),
-		width=65,
-		height=50,
-		fit=ft.ImageFit.CONTAIN,
-	)
-
-	r6 = ft.Row(
-		controls=[btn_round, btn_root, btn_exponent, python_img],
-		alignment=ft.MainAxisAlignment.SPACE_BETWEEN
-	)
-
-	page.add(txt)
-	page.add(
-		r1,
-		r2,
-		r3,
-		r4,
-		r5,
-		r6,
-	)
+	# Adding = button
+	but_equal = ft.ElevatedButton("=", width=300, on_click=calculate, bgcolor="cyan", color="black")
+	page.add(but_equal)
 
 
-ft.app(target=main)
+ft.app(target=main,)
 
 
