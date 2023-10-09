@@ -1,64 +1,203 @@
 import flet as ft
+import math
+from pathlib import Path
 
 
-def main(page: ft.Page):
-    page.title = "Calculatorr"
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
-    page.window_height = 400
-    page.window_width = 400
+def main(page: ft.page):
+	page.title = 'PyCalculator'
+	page.window_height = 450
+	page.window_width = 350
+	page.bgcolor = '#232323'
 
-    txt_field = ft.TextField(value="", text_align=ft.TextAlign.RIGHT, width=300, read_only=True,)
+	def keyboard(e):
+		try:
+			data = e.control.data
 
+			if (data in [str(n) for n in range(0, 10)]) or \
+				(data in ['<', '.', '+', '-', '*', '/', '(', ')', '**']):
+				txt.value = str(txt.value) + str(data)
+				page.update()
 
+			if data == '=':
+				txt.value = str(eval(txt.value))
+				page.update()
 
+			if data == 'e':
+				st = list(txt.value)
+				st.pop()
+				txt.value = ''.join(map(str, st))
+				page.update()
 
-    page.add(
-        ft.Column(
-            [
-                ft.Row(
-                    [
-                        txt_field,
-                    ], alignment=ft.MainAxisAlignment.CENTER,
-                ),
-                ft.Row(
-                    [
-                        ft.TextButton("7", data=7),
-                        ft.TextButton("8", data=8),
-                        ft.TextButton("9", data=9),
-                        ft.TextButton("+", data="+"),
-                    ], alignment=ft.MainAxisAlignment.CENTER,
+			if data == 'C':
+				st = list(txt.value)
+				st.pop()
+				txt.value = ''
+				page.update()
 
-                ),
-                ft.Row(
-                    [
-                        ft.TextButton("4", data=4),
-                        ft.TextButton("5", data=5),
-                        ft.TextButton("6", data=6),
-                        ft.TextButton("-", data="-"),
-                    ], alignment=ft.MainAxisAlignment.CENTER,
+			if data == '≈':
+				txt.value = round(int(txt.value))
+				txt.value = str(txt.value)
+				page.update()
 
-                ),
-                ft.Row(
-                    [
-                        ft.TextButton("1", data=1),
-                        ft.TextButton("2", data=2),
-                        ft.TextButton("3", data=3),
-                        ft.TextButton("x", data="x"),
-                    ], alignment=ft.MainAxisAlignment.CENTER,
+			if data == '√':
+				txt.value = str(math.sqrt(int(txt.value)))
+				page.update()
 
-                ),
-                ft.Row(
-                    [
-                        ft.TextButton("C",),
-                        ft.TextButton("0", data=0),
-                        ft.TextButton("=",),
-                        ft.TextButton("/", data="/"),
-                    ], alignment=ft.MainAxisAlignment.CENTER,
+		except (ValueError, IndexError, SyntaxError):
+			txt.value = 'Syntax Error'
+			page.update()
 
-                ),
-            ]
-        )
-    )
+	txt = ft.TextField(
+		read_only=True,
+		border_color='#FFFFFF',
+		text_style=ft.TextStyle(size=30, color='#FFFFFF')
+	)
+	# <, (, ), ÷
+	btn_e = ft.ElevatedButton(
+		text='<', bgcolor='#FFB703', color='#FFFFFF', data='e', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_po = ft.ElevatedButton(
+		text='(', bgcolor='#FFB703', color='#FFFFFF', data='(', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_pc = ft.ElevatedButton(
+		text=')', bgcolor='#FFB703', color='#FFFFFF', data=')', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_division = ft.ElevatedButton(
+		text='÷', bgcolor='#2A93D5', color='#232323', data='/', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+
+	r1 = ft.Row(
+		controls=[btn_e, btn_po, btn_pc, btn_division],
+		alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+	)
+
+	btn_7 = ft.ElevatedButton(
+		text='7', bgcolor='#FFFFFF', color='#232323', data='7', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_8 = ft.ElevatedButton(
+		text='8', bgcolor='#FFFFFF', color='#232323', data='8', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_9 = ft.ElevatedButton(
+		text='9', bgcolor='#FFFFFF', color='#232323', data='9', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_multiplication = ft.ElevatedButton(
+		text='×', bgcolor='#2A93D5', color='#232323', data='*', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+
+	r2 = ft.Row(
+		controls=[btn_7, btn_8, btn_9, btn_multiplication],
+		alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+	)
+
+	btn_4 = ft.ElevatedButton(
+		text='4', bgcolor='#FFFFFF', color='#232323', data='4', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_5 = ft.ElevatedButton(
+		text='5', bgcolor='#FFFFFF', color='#232323', data='5', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_6 = ft.ElevatedButton(
+		text='6', bgcolor='#FFFFFF', color='#232323', data='6', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_subtraction = ft.ElevatedButton(
+		text='-', bgcolor='#2A93D5', color='#232323', data='-', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+
+	r3 = ft.Row(
+		controls=[btn_4, btn_5, btn_6, btn_subtraction],
+		alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+	)
+
+	btn_1 = ft.ElevatedButton(
+		text='1', bgcolor='#FFFFFF', color='#232323', data='1', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_2 = ft.ElevatedButton(
+		text='2', bgcolor='#FFFFFF', color='#232323', data='2', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_3 = ft.ElevatedButton(
+		text='3', bgcolor='#FFFFFF', color='#232323', data='3', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_addition = ft.ElevatedButton(
+		text='+', bgcolor='#2A93D5', color='#232323', data='+', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+
+	r4 = ft.Row(
+		controls=[btn_1, btn_2, btn_3, btn_addition],
+		alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+	)
+
+	btn_c = ft.ElevatedButton(
+		text='C', bgcolor='#FFFFFF', color='#232323', data='C', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_0 = ft.ElevatedButton(
+		text='0', bgcolor='#FFFFFF', color='#232323', data='0', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_point = ft.ElevatedButton(
+		text='.', bgcolor='#FFFFFF', color='#232323', data='.', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_equal = ft.ElevatedButton(
+		text='=', bgcolor='#2A93D5', color='#232323', data='=', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+
+	r5 = ft.Row(
+		controls=[btn_c, btn_0, btn_point, btn_equal],
+		alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+	)
+
+	btn_round = ft.ElevatedButton(
+		text='≈', bgcolor='#FFB703', color='#FFFFFF', data='≈', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_root = ft.ElevatedButton(
+		text='√', bgcolor='#FFB703', color='#FFFFFF', data='√', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	btn_exponent = ft.ElevatedButton(
+		text='^', bgcolor='#FFB703', color='#FFFFFF', data='**', on_click=keyboard,
+		style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0))
+	)
+	python_img = ft.Image(
+		src=str(Path.cwd() / 'gui_app' / 'img' / 'snek_3.png'),
+		width=65,
+		height=50,
+		fit=ft.ImageFit.CONTAIN,
+	)
+
+	r6 = ft.Row(
+		controls=[btn_round, btn_root, btn_exponent, python_img],
+		alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+	)
+
+	page.add(txt)
+	page.add(
+		r1,
+		r2,
+		r3,
+		r4,
+		r5,
+		r6,
+	)
 
 
 ft.app(target=main)
+
+
