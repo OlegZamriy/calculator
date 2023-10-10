@@ -25,6 +25,7 @@ def main(page: ft.Page):
 			calc_input.value = calc_input.value + number
 			page.add(calc_input)
 
+
 	def calculate(e):
 
 		output = eval(calc_input.value)
